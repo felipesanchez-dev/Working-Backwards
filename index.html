@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Estrategia de Resolución Inversa — Taller Interactivo</title>
+    <meta
+      name="description"
+      content="Expo interactiva sobre la estrategia de resolución inversa aplicada a problemas matemáticos. Con pasos, diagramas, actividades y quiz."
+    />
+    <style>
+      :root {
+        --bg: #0b0f14;
+        --panel: #111827;
+        --muted: #6b7280;
+        --text: #e5e7eb;
+        --brand: #22d3ee;
+        --brand-2: #8b5cf6;
+        --ok: #10b981;
+        --warn: #f59e0b;
+        --bad: #ef4444;
+        --card: #0f172a;
+        --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI,
+          Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: radial-gradient(
+            1200px 600px at 10% -10%,
+            #102033 0%,
+            transparent 60%
+          ),
+          radial-gradient(800px 500px at 110% -30%, #1a1030 0%, transparent 60%),
+          var(--bg);
+        color: var(--text);
+      }
+      a {
+        color: var(--brand);
+      }
+      .container {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 24px;
+      }
+      header.hero {
+        position: relative;
+        overflow: hidden;
+        border-bottom: 1px solid #1f2937;
+      }
+      .hero-inner {
+        display: grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap: 24px;
+        align-items: center;
+      }
+      .title {
+        font-size: clamp(24px, 4vw, 44px);
+        line-height: 1.1;
+        margin: 0;
+      }
+      .subtitle {
+        color: var(--muted);
+        margin-top: 8px;
+      }
+      .card {
+        background: linear-gradient(145deg, #0c1420, #0a1018);
+        border: 1px solid #1f2937;
+        border-radius: 18px;
+        box-shadow: var(--shadow);
+      }
+      .badge {
+        display: inline-flex;
+        gap: 6px;
+        align-items: center;
+        border: 1px solid #243041;
+        background: #0a1220;
+        border-radius: 999px;
+        padding: 6px 10px;
+        color: #93c5fd;
+        font-size: 12px;
+      }
+      .pill {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        background: linear-gradient(
+          90deg,
+          rgba(34, 211, 238, 0.2),
+          rgba(139, 92, 246, 0.2)
+        );
+        border: 1px solid rgba(148, 163, 184, 0.2);
+        padding: 8px 12px;
+        border-radius: 999px;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        gap: 16px;
+      }
+      .col-4 {
+        grid-column: span 4;
+      }
+      .col-6 {
+        grid-column: span 6;
+      }
+      .col-8 {
+        grid-column: span 8;
+      }
+      .col-12 {
+        grid-column: span 12;
+      }
+
+      /* Nav */
+      .nav {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+      .tab {
+        cursor: pointer;
+        border: 1px solid #1f2937;
+        background: #0b1320;
+        border-radius: 12px;
+        padding: 10px 14px;
+        color: #cbd5e1;
+      }
+      .tab.active {
+        background: linear-gradient(
+          90deg,
+          rgba(34, 211, 238, 0.12),
+          rgba(139, 92, 246, 0.12)
+        );
+        border-color: #334155;
+        color: #e2e8f0;
+      }
+
+      /* Panels */
+      .panel {
+        display: none;
+        margin-top: 18px;
+      }
+      .panel.active {
+        display: block;
+      }
+
+      /* Stepper */
+      .stepper {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+      }
+      .step {
+        position: relative;
+        padding: 14px;
+        border: 1px dashed #334155;
+        border-radius: 14px;
+        flex: 1 1 180px;
+        background: linear-gradient(180deg, #0b1220, #0b0f14);
+      }
+      .step h4 {
+        margin: 0 0 6px 0;
+      }
+      .step .n {
+        display: inline-grid;
+        place-items: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+        font-weight: 700;
+      }
+      .step.active {
+        border-style: solid;
+        box-shadow: 0 0 0 2px rgba(34, 211, 238, 0.35) inset;
+      }
+      .step .hint {
+        color: #93c5fd;
+        font-size: 12px;
+      }
+      .controls {
+        display: flex;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      button {
+        cursor: pointer;
+        border: 1px solid #334155;
+        background: #0c1420;
+        color: #e5e7eb;
+        border-radius: 12px;
+        padding: 10px 14px;
+      }
+      button.primary {
+        background: linear-gradient(90deg, #22d3ee, #8b5cf6);
+        color: #0b0f14;
+        border: 0;
+        font-weight: 700;
+      }
+      button.ghost {
+        background: transparent;
+      }
+      button.small {
+        padding: 6px 10px;
+        border-radius: 10px;
+        font-size: 12px;
+      }
+
+      /* SVG Flow */
+      .flow {
+        width: 100%;
+        height: auto;
+      }
+      .flow .node {
+        cursor: pointer;
+        transition: transform 0.15s ease;
+      }
+      .flow .node:hover {
+        transform: translateY(-2px);
+      }
+
+      /* Cards */
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 14px;
+      }
+      .card-inner {
+        padding: 14px;
+      }
+
+      /* Modal */
+      .modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.6);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 16px;
+      }
+      .modal.show {
+        display: flex;
+      }
+      .modal .box {
+        max-width: 720px;
+        width: 100%;
+        background: #0b1320;
+        border: 1px solid #1f2937;
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+      }
+      .modal header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        border-bottom: 1px solid #1f2937;
+      }
+      .modal .content {
+        padding: 16px;
+      }
+
+      /* DnD */
+      .dnd {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      .dnd .bag,
+      .dnd .target {
+        min-height: 160px;
+        border: 1px dashed #334155;
+        border-radius: 12px;
+        padding: 10px;
+      }
+      .chip {
+        display: inline-block;
+        margin: 6px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid #334155;
+        background: #0c1420;
+      }
+
+      /* Quiz */
+      .question {
+        padding: 14px;
+        border: 1px solid #1f2937;
+        border-radius: 14px;
+        margin-bottom: 10px;
+      }
+      .choices {
+        display: grid;
+        gap: 8px;
+        margin-top: 8px;
+      }
+      .choices label {
+        display: flex;
+        gap: 8px;
+        align-items: flex-start;
+        border: 1px dashed #334155;
+        border-radius: 12px;
+        padding: 10px;
+      }
+
+      /* Utilities */
+      .muted {
+        color: var(--muted);
+      }
+      .divider {
+        height: 1px;
+        background: #1f2937;
+        margin: 18px 0;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+      }
+      .kpi {
+        padding: 12px;
+        border-radius: 14px;
+        background: linear-gradient(
+          135deg,
+          rgba(34, 211, 238, 0.1),
+          rgba(139, 92, 246, 0.06)
+        );
+        border: 1px solid #334155;
+      }
+
+      @media (max-width: 900px) {
+        .hero-inner {
+          grid-template-columns: 1fr;
+        }
+        .grid-3 {
+          grid-template-columns: 1fr;
+        }
+        .grid-2 {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="hero container">
+      <div class="hero-inner">
+        <div>
+          <div class="badge">🔁 Estrategias de Resolución de Problemas</div>
+          <h1 class="title">Resolución Inversa (Working Backwards)</h1>
+          <p class="subtitle">
+            Bienvenidos a la sección de Resolución Inversa (Working Backwards).
+          </p>
+          <div class="nav" role="tablist" aria-label="Secciones del taller">
+            <button class="tab active" data-panel="intro">Introducción</button>
+            <button class="tab" data-panel="teoria">Teoría</button>
+            <button class="tab" data-panel="estrategia">Metodología</button>
+            <button class="tab" data-panel="aplicacion">Aplicación</button>
+            <!-- <button class="tab" data-panel="practicar">Práctica</button>
+            <button class="tab" data-panel="quiz">Evaluación</button>
+            <button class="tab" data-panel="recursos">Recursos</button> -->
+          </div>
+        </div>
+          <div class="card-inner">
+            <div class="divider"></div>
+            <div class="pill">
+              ✨ Consejo: si te atoras, piensa en el último paso y deshazlo.
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- INTRO -->
+      <section id="intro" class="panel active">
+        <div class="row">
+          <div class="col-8">
+            <div class="card">
+              <div class="card-inner">
+                <h2>📚 Introducción Teórica a la Metodología</h2>
+                <p>
+                  La <strong>resolución inversa</strong> (Working Backwards) es
+                  una estrategia heurística de resolución de problemas que
+                  invierte el proceso cognitivo tradicional. En lugar de partir
+                  de los datos conocidos hacia lo desconocido, esta metodología
+                  comienza desde el <strong>objetivo final</strong> y construye
+                  una cadena de razonamiento regresivo.
+                </p>
+
+                <h3>🧮 Fundamento Matemático</h3>
+                <p>
+                  El principio se basa en la
+                  <strong>composición de funciones inversas</strong>: si tenemos
+                  una secuencia de transformaciones f₁, f₂, f₃... que nos llevan
+                  del estado inicial S₀ al estado final Sₙ, entonces aplicando
+                  las inversas f₃⁻¹, f₂⁻¹, f₁⁻¹ en orden reverso, podemos
+                  reconstruir el camino desde Sₙ hacia S₀.
+                </p>
+
+                <div class="pill">
+                  🎯 <strong>Principio clave:</strong> La reversibilidad de las
+                  operaciones permite la navegación bidireccional en el espacio
+                  de estados
+                </div>
+
+                <h3>🔄 Visualización del Proceso Cognitivo</h3>
+                <svg
+                  class="flow"
+                  viewBox="0 0 880 180"
+                  aria-label="Diagrama de flujo de la estrategia"
+                >
+                  <defs>
+                    <linearGradient id="g1" x1="0" x2="1">
+                      <stop offset="0%" stop-color="#22d3ee" />
+                      <stop offset="100%" stop-color="#8b5cf6" />
+                    </linearGradient>
+                  </defs>
+                  <g>
+                    <rect
+                      x="20"
+                      y="40"
+                      width="180"
+                      height="60"
+                      rx="12"
+                      fill="#0b1320"
+                      stroke="#334155"
+                    />
+                    <text x="110" y="75" fill="#e5e7eb" text-anchor="middle">
+                      Meta
+                    </text>
+
+                    <rect
+                      class="node"
+                      data-node="retro1"
+                      x="240"
+                      y="40"
+                      width="180"
+                      height="60"
+                      rx="12"
+                      fill="#0b1320"
+                      stroke="#334155"
+                    />
+                    <text x="330" y="75" fill="#e5e7eb" text-anchor="middle">
+                      Paso previo
+                    </text>
+
+                    <rect
+                      class="node"
+                      data-node="retro2"
+                      x="460"
+                      y="40"
+                      width="180"
+                      height="60"
+                      rx="12"
+                      fill="#0b1320"
+                      stroke="#334155"
+                    />
+                    <text x="550" y="75" fill="#e5e7eb" text-anchor="middle">
+                      Paso previo
+                    </text>
+
+                    <rect
+                      x="680"
+                      y="40"
+                      width="180"
+                      height="60"
+                      rx="12"
+                      fill="#0b1320"
+                      stroke="#334155"
+                    />
+                    <text x="770" y="75" fill="#e5e7eb" text-anchor="middle">
+                      Inicio
+                    </text>
+
+                    <path d="M200 70 H240" stroke="url(#g1)" stroke-width="3" />
+                    <path d="M420 70 H460" stroke="url(#g1)" stroke-width="3" />
+                    <path d="M640 70 H680" stroke="url(#g1)" stroke-width="3" />
+                  </g>
+                </svg>
+                <p class="muted">
+                  Haz clic en los bloques morados para ver ejemplos detallados �
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col-4">
+            <div class="card">
+              <div class="card-inner">
+                <h3>🎓 Marco Conceptual</h3>
+                <p class="muted">
+                  La resolución inversa forma parte de las
+                  <strong>estrategias heurísticas</strong> en la resolución de
+                  problemas, junto con:
+                </p>
+                <ul>
+                  <li>
+                    💡 <strong>Analogía:</strong> Usar problemas similares
+                  </li>
+                  <li>🔀 <strong>Divide y vencerás:</strong> Descomposición</li>
+                  <li>
+                    🔍 <strong>Ensayo y error:</strong> Búsqueda sistemática
+                  </li>
+                  <li>
+                    🎯 <strong>Working backwards:</strong> Razonamiento
+                    regresivo
+                  </li>
+                </ul>
+
+                <h3>⚡ Ventaja Cognitiva Principal</h3>
+                <p>
+                  Reduce la <em>carga cognitiva</em> al eliminar caminos
+                  irrelevantes desde el inicio, focalizando todos los recursos
+                  mentales en la construcción de una ruta directa hacia el
+                  objetivo.
+                </p>
+
+                <div class="divider"></div>
+                <button id="btnDemo" class="primary">
+                  Ver una demo guiada
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TEORÍA -->
+      <section id="teoria" class="panel">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-inner">
+                <h2>🧠 Fundamentos Teóricos</h2>
+
+                <div class="grid-2" style="margin-bottom: 20px">
+                  <div>
+                    <h3>Definición Formal</h3>
+                    <p>
+                      La <strong>resolución inversa</strong> es un método
+                      heurístico que opera mediante el
+                      <em>razonamiento regresivo</em>, partiendo del estado meta
+                      y aplicando sistemáticamente las operaciones inversas
+                      hasta alcanzar el estado inicial conocido o desconocido.
+                    </p>
+                  </div>
+                  <div>
+                    <h3>Base Matemática</h3>
+                    <p>
+                      Se fundamenta en la
+                      <strong>propiedad de reversibilidad</strong> de las
+                      operaciones matemáticas y la
+                      <strong>composición de funciones inversas</strong>: si
+                      f(x) = y, entonces f⁻¹(y) = x.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3>🎯 Ventajas de la Estrategia</h3>
+                <div class="cards">
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>✨ Claridad de objetivo</h4>
+                      <p>
+                        Al partir de la meta, mantienes siempre clara la
+                        dirección hacia donde te diriges.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>⚡ Eficiencia cognitiva</h4>
+                      <p>
+                        Reduce la carga mental al eliminar caminos irrelevantes
+                        o innecesarios.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>🔍 Simplificación</h4>
+                      <p>
+                        Convierte problemas complejos en una serie de pasos más
+                        manejables.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>🎲 Versatilidad</h4>
+                      <p>
+                        Aplicable a múltiples dominios: matemáticas, lógica,
+                        programación, vida cotidiana.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3>🎯 Análisis Ventajas vs Limitaciones</h3>
+                <div class="grid-2">
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>✅ Fortalezas Principales</h4>
+                      <ul>
+                        <li>
+                          <strong>Eficiencia cognitiva:</strong> Elimina caminos
+                          irrelevantes
+                        </li>
+                        <li>
+                          <strong>Claridad direccional:</strong> Mantiene el
+                          objetivo siempre visible
+                        </li>
+                        <li>
+                          <strong>Reducción de complejidad:</strong> Convierte
+                          problemas grandes en pasos manejables
+                        </li>
+                        <li>
+                          <strong>Aplicabilidad amplia:</strong> Múltiples
+                          dominios del conocimiento
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>❌ Restricciones Inherentes</h4>
+                      <ul>
+                        <li>
+                          <strong>Reversibilidad requerida:</strong> No todas
+                          las operaciones son invertibles
+                        </li>
+                        <li>
+                          <strong>Meta bien definida:</strong> Necesita
+                          objetivos claros y específicos
+                        </li>
+                        <li>
+                          <strong>Limitación estocástica:</strong> No funciona
+                          con procesos aleatorios
+                        </li>
+                        <li>
+                          <strong>Carga cognitiva inicial:</strong> Requiere
+                          pensamiento abstracto
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 16px">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-inner">
+                <h3>🧮 Análisis Comparativo de Estrategias Heurísticas</h3>
+                <p class="muted">
+                  La resolución inversa se distingue de otras metodologías por
+                  su enfoque orientado al objetivo:
+                </p>
+
+                <div class="grid-2" style="margin-top: 16px">
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>🎯 Resolución Inversa</h4>
+                      <ul>
+                        <li>✅ <strong>Dirección:</strong> Meta → Inicio</li>
+                        <li>
+                          ✅ <strong>Enfoque:</strong> Orientado al objetivo
+                        </li>
+                        <li>
+                          ✅ <strong>Requisito:</strong> Operaciones reversibles
+                        </li>
+                        <li>
+                          ✅ <strong>Fortaleza:</strong> Reduce el espacio de
+                          búsqueda
+                        </li>
+                        <li>
+                          ❌ <strong>Limitación:</strong> Requiere meta bien
+                          definida
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>🔀 Otras Estrategias</h4>
+                      <ul>
+                        <li>
+                          <strong>Ensayo y error:</strong> Exploración aleatoria
+                        </li>
+                        <li>
+                          <strong>Divide y vencerás:</strong> Descomposición
+                          recursiva
+                        </li>
+                        <li>
+                          <strong>Analogía:</strong> Transferencia de
+                          conocimiento
+                        </li>
+                        <li>
+                          <strong>Fuerza bruta:</strong> Exploración exhaustiva
+                        </li>
+                        <li>
+                          <strong>Programación dinámica:</strong> Subproblemas
+                          óptimos
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3>🧠 Modelo Cognitivo</h3>
+                <p>El proceso mental involucra tres fases clave:</p>
+                <div class="stepper">
+                  <div class="step">
+                    <div class="n">1</div>
+                    <h4>Representación mental</h4>
+                    <div class="hint">Visualizar claramente el estado meta</div>
+                  </div>
+                  <div class="step">
+                    <div class="n">2</div>
+                    <h4>Transformación regresiva</h4>
+                    <div class="hint">
+                      Aplicar operaciones inversas sistemáticamente
+                    </div>
+                  </div>
+                  <div class="step">
+                    <div class="n">3</div>
+                    <h4>Validación progresiva</h4>
+                    <div class="hint">
+                      Verificar la ruta construida hacia adelante
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ESTRATEGIA (METODOLOGÍA) -->
+      <section id="estrategia" class="panel">
+        <div class="card">
+          <div class="card-inner">
+            <h2>📋 Metodología: Pasos de la Estrategia</h2>
+            <div class="stepper" id="stepper">
+              <div class="step active" data-step="1">
+                <div class="n">1</div>
+                <h4>Define la meta</h4>
+                <div class="hint">¿Qué quieres al final?</div>
+              </div>
+              <div class="step" data-step="2">
+                <div class="n">2</div>
+                <h4>Describe el estado previo</h4>
+                <div class="hint">¿Qué debía ser cierto justo antes?</div>
+              </div>
+              <div class="step" data-step="3">
+                <div class="n">3</div>
+                <h4>Invierte la operación</h4>
+                <div class="hint">Deshaz lo que te llevó a la meta.</div>
+              </div>
+              <div class="step" data-step="4">
+                <div class="n">4</div>
+                <h4>Itera hacia atrás</h4>
+                <div class="hint">Repite hasta llegar al inicio.</div>
+              </div>
+              <div class="step" data-step="5">
+                <div class="n">5</div>
+                <h4>Verifica hacia adelante</h4>
+                <div class="hint">Simula del inicio a la meta.</div>
+              </div>
+            </div>
+            <div class="controls">
+              <button class="ghost" id="prev">◀ Anterior</button>
+              <button class="primary" id="next">Siguiente ▶</button>
+              <button class="ghost small" id="resetStepper">Reiniciar</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row" style="margin-top: 14px">
+          <div class="col-6">
+            <div class="card">
+              <div class="card-inner">
+                <h3>Diagrama secuencial</h3>
+                <ol id="seqList">
+                  <li>🧭 Meta: <em>llegar a 20 caramelos</em>.</li>
+                  <li>↩ Estado previo: <em>después de sumar 5</em>.</li>
+                  <li>⤿ Invertir: <em>restar 5</em> ⇒ 15.</li>
+                  <li>
+                    ⤿ Invertir: <em>doblar al revés = mitad</em> ⇒ 7.5 (ajustar
+                    si el contexto exige enteros).
+                  </li>
+                  <li>
+                    ✅ Verificar: aplicar pasos originales y comprobar 20.
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card">
+              <div class="card-inner">
+                <h3>Ordena los pasos (Drag & Drop)</h3>
+                <div class="dnd">
+                  <div
+                    class="bag"
+                    id="bag"
+                    aria-label="Pasos desordenados"
+                  ></div>
+                  <div
+                    class="target"
+                    id="target"
+                    aria-label="Orden correcto"
+                  ></div>
+                </div>
+                <div class="controls">
+                  <button id="checkOrder" class="primary">Comprobar</button>
+                  <span id="orderMsg" class="muted"></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- APLICACIÓN -->
+      <section id="aplicacion" class="panel">
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-inner">
+                <h2>🚀 Aplicaciones de la Resolución Inversa</h2>
+
+                <div
+                  class="card"
+                  style="
+                    background: linear-gradient(
+                      135deg,
+                      rgba(34, 211, 238, 0.05),
+                      rgba(139, 92, 246, 0.05)
+                    );
+                    margin-bottom: 20px;
+                  "
+                >
+                  <div class="card-inner">
+                    <h3>🏗️ Taxonomía de Problemas Ideales</h3>
+                    <div class="grid-3">
+                      <div class="card">
+                        <div class="card-inner">
+                          <h4>🧮 Problemas Algebraicos</h4>
+                          <ul>
+                            <li>Ecuaciones de primer y segundo grado</li>
+                            <li>Sistemas de ecuaciones lineales</li>
+                            <li>Factorizaciones polinómicas</li>
+                            <li>Problemas de proporcionalidad</li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="card">
+                        <div class="card-inner">
+                          <h4>⚡ Problemas de Optimización</h4>
+                          <ul>
+                            <li>Rutas más cortas o eficientes</li>
+                            <li>Asignación óptima de recursos</li>
+                            <li>Planificación temporal (PERT/CPM)</li>
+                            <li>Problemas de minimización de costos</li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div class="card">
+                        <div class="card-inner">
+                          <h4>🔍 Problemas Lógicos</h4>
+                          <ul>
+                            <li>Deducciones e inferencias</li>
+                            <li>Condicionales encadenados</li>
+                            <li>Árboles de decisión</li>
+                            <li>Pruebas por contradicción</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="divider"></div>
+                    <p class="muted">
+                      <strong>Criterio común:</strong> Todos estos tipos
+                      comparten la característica de tener operaciones
+                      <em>reversibles</em> y un objetivo
+                      <em>claramente definido</em>.
+                    </p>
+                  </div>
+                </div>
+
+                <div class="cards">
+                  <article class="card">
+                    <div class="card-inner">
+                      <h3>🧮 Matemáticas</h3>
+                      <ul>
+                        <li>
+                          <strong>Álgebra:</strong> Resolver ecuaciones,
+                          sistemas lineales
+                        </li>
+                        <li>
+                          <strong>Geometría:</strong> Construcciones
+                          geométricas, demostraciones
+                        </li>
+                        <li>
+                          <strong>Aritmética:</strong> Problemas de edad,
+                          distancia, tiempo
+                        </li>
+                        <li>
+                          <strong>Cálculo:</strong> Optimización, derivadas e
+                          integrales
+                        </li>
+                      </ul>
+                    </div>
+                  </article>
+
+                  <article class="card">
+                    <div class="card-inner">
+                      <h3>💻 Programación e Informática</h3>
+                      <ul>
+                        <li>
+                          <strong>Algoritmos:</strong> Búsqueda hacia atrás,
+                          backtracking
+                        </li>
+                        <li>
+                          <strong>Debugging:</strong> Rastrear errores desde el
+                          síntoma
+                        </li>
+                        <li>
+                          <strong>Diseño:</strong> Arquitectura de software
+                          orientada a objetivos
+                        </li>
+                        <li>
+                          <strong>IA:</strong> Planificación automática,
+                          sistemas expertos
+                        </li>
+                      </ul>
+                    </div>
+                  </article>
+
+                  <article class="card">
+                    <div class="card-inner">
+                      <h3>🎯 Planificación y Gestión</h3>
+                      <ul>
+                        <li>
+                          <strong>Proyectos:</strong> Cronogramas, hitos,
+                          dependencias
+                        </li>
+                        <li>
+                          <strong>Presupuestos:</strong> Objetivos financieros,
+                          metas de ahorro
+                        </li>
+                        <li>
+                          <strong>Logística:</strong> Rutas óptimas, cadenas de
+                          suministro
+                        </li>
+                        <li>
+                          <strong>Estrategia:</strong> Objetivos
+                          organizacionales, KPIs
+                        </li>
+                      </ul>
+                    </div>
+                  </article>
+
+                  <article class="card">
+                    <div class="card-inner">
+                      <h3>🔬 Ciencias</h3>
+                      <ul>
+                        <li>
+                          <strong>Física:</strong> Análisis de trayectorias,
+                          conservación
+                        </li>
+                        <li>
+                          <strong>Química:</strong> Síntesis orgánica, análisis
+                          retrosintético
+                        </li>
+                        <li>
+                          <strong>Biología:</strong> Evolución, árboles
+                          filogenéticos
+                        </li>
+                        <li>
+                          <strong>Medicina:</strong> Diagnóstico diferencial
+                        </li>
+                      </ul>
+                    </div>
+                  </article>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3>📋 Casos de Estudio Detallados</h3>
+                <div class="row">
+                  <div class="col-6">
+                    <div class="card">
+                      <div class="card-inner">
+                        <h4>Caso 1: Planificación de Viaje</h4>
+                        <p>
+                          <strong>Objetivo:</strong> Llegar a París el 15 de
+                          diciembre a las 10:00 AM
+                        </p>
+
+                        <div class="stepper">
+                          <div class="step active">
+                            <div class="n">🎯</div>
+                            <h4>Meta</h4>
+                            <div class="hint">París, 15/12, 10:00 AM</div>
+                          </div>
+                          <div class="step">
+                            <div class="n">✈️</div>
+                            <h4>Vuelo</h4>
+                            <div class="hint">
+                              Salida 14/12, 11:00 PM (11h vuelo)
+                            </div>
+                          </div>
+                          <div class="step">
+                            <div class="n">🚗</div>
+                            <h4>Traslado</h4>
+                            <div class="hint">Salir de casa 14/12, 8:00 PM</div>
+                          </div>
+                          <div class="step">
+                            <div class="n">🧳</div>
+                            <h4>Preparación</h4>
+                            <div class="hint">
+                              Empacar 13/12, documentos listos
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-6">
+                    <div class="card">
+                      <div class="card-inner">
+                        <h4>Caso 2: Desarrollo de Software</h4>
+                        <p>
+                          <strong>Objetivo:</strong> App móvil funcionando en
+                          producción
+                        </p>
+
+                        <div class="stepper">
+                          <div class="step active">
+                            <div class="n">📱</div>
+                            <h4>Producción</h4>
+                            <div class="hint">
+                              App en tiendas, usuarios activos
+                            </div>
+                          </div>
+                          <div class="step">
+                            <div class="n">🧪</div>
+                            <h4>Testing</h4>
+                            <div class="hint">
+                              QA, beta testing, corrección de bugs
+                            </div>
+                          </div>
+                          <div class="step">
+                            <div class="n">⚙️</div>
+                            <h4>Desarrollo</h4>
+                            <div class="hint">
+                              Código, integración, features
+                            </div>
+                          </div>
+                          <div class="step">
+                            <div class="n">📐</div>
+                            <h4>Diseño</h4>
+                            <div class="hint">
+                              UX/UI, arquitectura, requisitos
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <h3>🛠️ Herramientas y Técnicas de Apoyo</h3>
+                <div class="grid-3">
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>🗂️ Diagramas de Flujo Inverso</h4>
+                      <p>
+                        Representación visual del proceso desde la meta hasta el
+                        inicio
+                      </p>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>📋 Listas de Verificación</h4>
+                      <p>
+                        Checklist para validar cada paso del proceso inverso
+                      </p>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-inner">
+                      <h4>🔄 Tablas de Inversión</h4>
+                      <p>
+                        Correspondencia entre operaciones directas e inversas
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- PRACTICAR -->
+      <section id="practicar" class="panel">
+        <div class="card">
+          <div class="card-inner">
+            <h2>💪 Práctica Interactiva</h2>
+            <p>
+              Pon a prueba tus conocimientos con estos problemas diseñados
+              específicamente para aplicar la resolución inversa. Cada ejercicio
+              incluye una guía paso a paso.
+            </p>
+          </div>
+        </div>
+        <div class="cards">
+          <article class="card problem" data-problem="canicas">
+            <div class="card-inner">
+              <h3>Canicas en un cofre</h3>
+              <p class="muted">
+                Al final quedan <strong>9</strong> canicas. Justo antes, se
+                <em>sumaron 3</em>. Antes de eso, se <em>duplicó</em> el número.
+                ¿Cuántas había al inicio?
+              </p>
+              <button class="primary open">Resolver</button>
+            </div>
+          </article>
+          <article class="card problem" data-problem="pizzas">
+            <div class="card-inner">
+              <h3>Rebanadas de pizza</h3>
+              <p class="muted">
+                Al final hay <strong>26</strong> rebanadas. Antes, se
+                <em>sumaron 2</em>. Antes, se <em>triplicó</em>. ¿Cuántas había
+                al inicio?
+              </p>
+              <button class="primary open">Resolver</button>
+            </div>
+          </article>
+          <article class="card problem" data-problem="sendero">
+            <div class="card-inner">
+              <h3>Sendero con peajes</h3>
+              <p class="muted">
+                Llegas con <strong>$17</strong>. Antes pagaste <em>$5</em>.
+                Antes, te descontaron la <em>mitad</em>. ¿Con cuánto empezaste?
+              </p>
+              <button class="primary open">Resolver</button>
+            </div>
+          </article>
+          <article class="card problem" data-problem="custom">
+            <div class="card-inner">
+              <h3>Crea tu propio problema</h3>
+              <p class="muted">
+                Define la meta y las operaciones finales, y deja que el
+                asistente invierta los pasos contigo.
+              </p>
+              <button class="primary open">Configurar</button>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- QUIZ -->
+      <section id="quiz" class="panel">
+        <div class="card">
+          <div class="card-inner">
+            <h2>📊 Evaluación: Quiz Interactivo</h2>
+            <p>
+              Evalúa tu comprensión de la resolución inversa con estas preguntas
+              cuidadosamente diseñadas.
+            </p>
+            <div class="question" data-answer="c">
+              <div>
+                <strong>1.</strong> ¿Cuál es la primera acción al aplicar
+                resolución inversa?
+              </div>
+              <div class="choices">
+                <label
+                  ><input type="radio" name="q1" value="a" /> Probar números al
+                  azar.</label
+                >
+                <label
+                  ><input type="radio" name="q1" value="b" /> Ejecutar las
+                  operaciones hacia adelante.</label
+                >
+                <label
+                  ><input type="radio" name="q1" value="c" /> Definir con
+                  claridad la meta.</label
+                >
+              </div>
+            </div>
+            <div class="question" data-answer="b">
+              <div>
+                <strong>2.</strong> Si el último paso fue "sumar 7", la
+                inversión correcta es…
+              </div>
+              <div class="choices">
+                <label
+                  ><input type="radio" name="q2" value="a" /> Dividir entre
+                  7.</label
+                >
+                <label
+                  ><input type="radio" name="q2" value="b" /> Restar 7.</label
+                >
+                <label
+                  ><input type="radio" name="q2" value="c" /> Multiplicar por
+                  7.</label
+                >
+              </div>
+            </div>
+            <div class="question" data-answer="a">
+              <div>
+                <strong>3.</strong> ¿Qué paso valida que no cometiste errores al
+                invertir?
+              </div>
+              <div class="choices">
+                <label
+                  ><input type="radio" name="q3" value="a" /> Verificar hacia
+                  adelante.</label
+                >
+                <label
+                  ><input type="radio" name="q3" value="b" /> Adivinar y
+                  ajustar.</label
+                >
+                <label
+                  ><input type="radio" name="q3" value="c" /> Comparar con otra
+                  estrategia.</label
+                >
+              </div>
+            </div>
+            <div class="controls">
+              <button id="grade" class="primary">Calificar</button>
+              <span id="score" class="muted"></span>
+              <button id="saveProgress" class="ghost small">
+                Guardar progreso
+              </button>
+              <button id="loadProgress" class="ghost small">
+                Cargar progreso
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RECURSOS -->
+      <section id="recursos" class="panel">
+        <div class="card">
+          <div class="card-inner">
+            <h2>📚 Recursos y Material Complementario</h2>
+
+            <div class="row">
+              <div class="col-8">
+                <h3>🔧 Plantilla de Trabajo Inverso</h3>
+                <div class="card" style="background: #0a1018">
+                  <div class="card-inner">
+                    <ol>
+                      <li>
+                        <strong>Meta</strong> (resultado final):
+                        <em>Describe claramente el estado objetivo…</em>
+                      </li>
+                      <li>
+                        <strong>Operación final:</strong>
+                        <em>¿Qué se hizo último?</em> →
+                        <strong>Inversa:</strong> <em>¿Cómo deshacerlo?</em>
+                      </li>
+                      <li>
+                        <strong>Estado previo 1:</strong>
+                        <em>¿Cómo estaba antes de la operación final?</em>
+                      </li>
+                      <li>
+                        <strong>Operación previa:</strong>
+                        <em>¿Qué se hizo antes?</em> →
+                        <strong>Inversa:</strong> <em>¿Cómo deshacerlo?</em>
+                      </li>
+                      <li>
+                        <strong>Estado inicial:</strong>
+                        <em>Valor o condición de partida</em>
+                      </li>
+                      <li>
+                        <strong>Verificación:</strong>
+                        <em
+                          >Ejecuta hacia adelante y confirma que llegas a la
+                          meta</em
+                        >
+                      </li>
+                    </ol>
+                    <button id="exportJSON" class="primary">
+                      📁 Exportar plantilla (.json)
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-4">
+                <h3>💡 Consejos Avanzados</h3>
+                <ul>
+                  <li>
+                    🔍 Si aparecen <strong>fracciones</strong> al invertir,
+                    revisa el contexto del problema
+                  </li>
+                  <li>
+                    📝 <strong>Documenta</strong> cada inversión con su
+                    justificación matemática
+                  </li>
+                  <li>
+                    ✅ <strong>Verifica siempre</strong> ejecutando los pasos
+                    hacia adelante
+                  </li>
+                  <li>
+                    🎯 Mantén la <strong>meta visible</strong> durante todo el
+                    proceso
+                  </li>
+                  <li>
+                    🔄 Si te atascas, <strong>revisa</strong> si todas las
+                    operaciones son realmente reversibles
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <h3>📖 Bibliografía y Referencias</h3>
+            <div class="cards">
+              <div class="card">
+                <div class="card-inner">
+                  <h4>📚 Libros de referencia</h4>
+                  <ul>
+                    <li>"How to Solve It" - George Pólya</li>
+                    <li>"Mathematical Problem Solving" - Alan Schoenfeld</li>
+                    <li>"The Art of Problem Solving" - Richard Rusczyk</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-inner">
+                  <h4>🌐 Recursos online</h4>
+                  <ul>
+                    <li>Khan Academy - Problem Solving Strategies</li>
+                    <li>MIT OpenCourseWare - Mathematics</li>
+                    <li>Coursera - Mathematical Thinking</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-inner">
+                  <h4>🏆 Competencias matemáticas</h4>
+                  <ul>
+                    <li>Olimpiada Matemática Nacional</li>
+                    <li>
+                      AIME (American Invitational Mathematics Examination)
+                    </li>
+                    <li>IMO (International Mathematical Olympiad)</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <h3>⚙️ Herramientas Interactivas</h3>
+            <div class="grid-3">
+              <button id="toggleTheme" class="card">
+                <div class="card-inner">
+                  <h4>🌗 Cambiar tema</h4>
+                  <p>Alterna entre modo claro y oscuro</p>
+                </div>
+              </button>
+              <button class="card" onclick="window.print()">
+                <div class="card-inner">
+                  <h4>🖨️ Imprimir</h4>
+                  <p>Genera una versión para imprimir</p>
+                </div>
+              </button>
+              <button
+                class="card"
+                onclick="navigator.share && navigator.share({title: 'Resolución Inversa', url: window.location.href})"
+              >
+                <div class="card-inner">
+                  <h4>📤 Compartir</h4>
+                  <p>Comparte esta exposición</p>
+                </div>
+              </button>
+            </div>
+
+            <div class="divider"></div>
+
+            <div
+              class="card"
+              style="
+                background: linear-gradient(
+                  135deg,
+                  rgba(34, 211, 238, 0.1),
+                  rgba(139, 92, 246, 0.1)
+                );
+              "
+            >
+              <div class="card-inner">
+                <h3>� Para el educador</h3>
+                <p>Esta exposición interactiva puede ser utilizada como:</p>
+                <ul>
+                  <li>
+                    📱 <strong>Material de clase:</strong> Proyectar durante la
+                    explicación
+                  </li>
+                  <li>
+                    📚 <strong>Tarea interactiva:</strong> Los estudiantes
+                    pueden explorar a su ritmo
+                  </li>
+                  <li>
+                    🔬 <strong>Laboratorio virtual:</strong> Experimentar con
+                    problemas personalizados
+                  </li>
+                  <li>
+                    📊 <strong>Herramienta de evaluación:</strong> Quiz
+                    integrado con seguimiento de progreso
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+      <div class="box">
+        <header>
+          <strong id="modalTitle">Resolver</strong>
+          <button id="closeModal">✕</button>
+        </header>
+        <div class="content" id="modalContent"></div>
+      </div>
+    </div>
+
+    <script>
+      // ===== Navegación por pestañas =====
+      const tabs = document.querySelectorAll(".tab");
+      const panels = document.querySelectorAll(".panel");
+      tabs.forEach((t) =>
+        t.addEventListener("click", () => {
+          tabs.forEach((x) => x.classList.remove("active"));
+          t.classList.add("active");
+          panels.forEach((p) => p.classList.remove("active"));
+          document.getElementById(t.dataset.panel).classList.add("active");
+        })
+      );
+
+      // ===== Stepper =====
+      const stepper = document.getElementById("stepper");
+      const steps = [...stepper.querySelectorAll(".step")];
+      let idx = 0;
+      const setActive = (i) => {
+        steps.forEach((s) => s.classList.remove("active"));
+        steps[i].classList.add("active");
+      };
+      document.getElementById("next").onclick = () => {
+        idx = Math.min(idx + 1, steps.length - 1);
+        setActive(idx);
+      };
+      document.getElementById("prev").onclick = () => {
+        idx = Math.max(idx - 1, 0);
+        setActive(idx);
+      };
+      document.getElementById("resetStepper").onclick = () => {
+        idx = 0;
+        setActive(idx);
+      };
+
+      // ===== Flow nodes demo =====
+      document.querySelectorAll(".flow .node").forEach((n) => {
+        n.addEventListener("click", () => {
+          openModal(
+            "Ejemplo breve",
+            `<p>Imagina que la meta es <strong>40</strong>. Si lo último fue 
+        <em>sumar 8</em>, el estado previo era <strong>32</strong>. Si antes se <em>duplicó</em>, 
+        entonces el estado anterior era <strong>16</strong>. Así retrocedes hasta el inicio.</p>`
+          );
+        });
+      });
+      document.getElementById("btnDemo").onclick = () => {
+        openModal(
+          "Demo guiada",
+          `<ol>
+        <li>Meta: 20.</li>
+        <li>Último paso: +5 ⇒ inversa: −5 → 15.</li>
+        <li>Penúltimo: ×2 ⇒ inversa: ÷2 → 7.5.</li>
+        <li>Repite hasta llegar a un inicio coherente con el contexto.</li>
+        <li>Verifica hacia adelante.</li>
+      </ol>`
+        );
+      };
+
+      // ===== Drag & Drop de pasos =====
+      const bag = document.getElementById("bag");
+      const target = document.getElementById("target");
+      const pasos = [
+        "Define la meta",
+        "Describe el estado previo",
+        "Invierte la operación",
+        "Itera hacia atrás",
+        "Verifica hacia adelante",
+      ];
+      function shuffle(a) {
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+      function renderDnD() {
+        bag.innerHTML = "";
+        target.innerHTML = "";
+        shuffle([...pasos]).forEach((txt, i) => {
+          const el = document.createElement("div");
+          el.textContent = txt;
+          el.className = "chip";
+          el.draggable = true;
+          el.id = "chip-" + i;
+          el.addEventListener("dragstart", (ev) => {
+            ev.dataTransfer.setData("text/plain", txt);
+          });
+          bag.appendChild(el);
+        });
+        [bag, target].forEach((box) => {
+          box.addEventListener("dragover", (ev) => ev.preventDefault());
+          box.addEventListener("drop", (ev) => {
+            ev.preventDefault();
+            const txt = ev.dataTransfer.getData("text/plain");
+            const chip = document.createElement("div");
+            chip.textContent = txt;
+            chip.className = "chip";
+            box.appendChild(chip);
+          });
+        });
+      }
+      renderDnD();
+      document.getElementById("checkOrder").onclick = () => {
+        const chosen = [...target.querySelectorAll(".chip")].map((x) =>
+          x.textContent.trim()
+        );
+        const ok = JSON.stringify(chosen) === JSON.stringify(pasos);
+        document.getElementById("orderMsg").textContent = ok
+          ? "✅ ¡Perfecto!"
+          : "❌ Aún no. Intenta reorganizar.";
+      };
+
+      // ===== Problemas guiados =====
+      const problems = {
+        canicas: {
+          title: "Canicas en un cofre",
+          goal: 9,
+          steps: [
+            { op: "+3", inv: "-3" },
+            { op: "×2", inv: "÷2" },
+          ],
+          context: "Enteros no negativos",
+        },
+        pizzas: {
+          title: "Rebanadas de pizza",
+          goal: 26,
+          steps: [
+            { op: "+2", inv: "-2" },
+            { op: "×3", inv: "÷3" },
+          ],
+          context: "Enteros",
+        },
+        sendero: {
+          title: "Sendero con peajes",
+          goal: 17,
+          steps: [
+            { op: "-5", inv: "+5" },
+            { op: "mitad", inv: "×2" },
+          ],
+          context: "Reales",
+        },
+      };
+
+      function renderSolver(cfg) {
+        const html = `
+        <p><strong>Meta</strong>: ${cfg.goal}</p>
+        <p>Invierte los pasos uno por uno:</p>
+        <ol id="invList">${cfg.steps
+          .map(
+            (s, i) =>
+              `<li>Último fue <code>${s.op}</code> → inversa: <input data-i="${i}" size="4" placeholder="?"> </li>`
+          )
+          .join("")}</ol>
+        <div class="divider"></div>
+        <label>Resultado al invertir todo: <input id="startGuess" type="number" placeholder="Inicio"></label>
+        <div class="controls"><button id="checkSolver" class="primary">Comprobar</button><span id="solverMsg" class="muted"></span></div>
+      `;
+        openModal("Resolución guiada", html);
+        document.getElementById("checkSolver").onclick = () => {
+          const inputs = [...document.querySelectorAll("#invList input")];
+          const okOps = inputs.every(
+            (inp, i) => inp.value.replaceAll(" ", "") === cfg.steps[i].inv
+          );
+          // calcular inicio real
+          let x = cfg.goal;
+          cfg.steps.forEach((s) => {
+            // aplicar inversas declaradas
+            if (s.inv.startsWith("-")) x += parseFloat(s.inv.slice(1)) * -1; // no se usa
+          });
+          // Mejor: calcular por las inversas conocidas en cfg
+          let start = cfg.goal;
+          cfg.steps.forEach((s) => {
+            const inv = s.inv;
+            if (inv.startsWith("-")) {
+              start = start - parseFloat(inv.slice(1));
+            } // (inv de +k) es -k
+            else if (inv.startsWith("+")) {
+              start = start + parseFloat(inv.slice(1));
+            } else if (inv.startsWith("÷")) {
+              start = start / parseFloat(inv.slice(1));
+            } else if (inv.startsWith("×")) {
+              start = start * parseFloat(inv.slice(1));
+            } else if (inv === "×2") {
+              start = start * 2;
+            } else if (inv === "mitad") {
+              start = start / 2;
+            }
+          });
+          const guess = parseFloat(document.getElementById("startGuess").value);
+          const okStart =
+            !Number.isNaN(guess) && Math.abs(guess - start) < 1e-9;
+          const msg =
+            okOps && okStart
+              ? `✅ Correcto. Inicio = ${start}`
+              : `❌ Revisa: ${
+                  okOps ? "valor de inicio" : "inversas indicadas"
+                }`;
+          document.getElementById("solverMsg").textContent = msg;
+        };
+      }
+
+      function renderCustom() {
+        const html = `
+        <p>Define tu problema:</p>
+        <div class="grid-2">
+          <label>Meta: <input id="c_goal" type="number" placeholder="p.ej., 40"></label>
+          <label>Pasos (del último al primero): <textarea id="c_steps" rows="4" placeholder="Ejemplos de pasos finales\n+5\n×2\n-3\nmitad"></textarea></label>
+        </div>
+        <div class="divider"></div>
+        <button id="build" class="primary">Construir y resolver</button>
+        <div id="customHolder"></div>
+      `;
+        openModal("Creador de problema", html);
+        document.getElementById("build").onclick = () => {
+          const goal = parseFloat(document.getElementById("c_goal").value);
+          const raw = document
+            .getElementById("c_steps")
+            .value.split(/\n+/)
+            .map((s) => s.trim())
+            .filter(Boolean);
+          const steps = raw.map((s) => ({ op: s, inv: invertOp(s) }));
+          const cfg = { title: "Personalizado", goal, steps };
+          const mount = document.getElementById("customHolder");
+          mount.innerHTML = `<div class="divider"></div><h4>Inversas detectadas</h4><ul>${steps
+            .map((s) => `<li>${s.op} → <code>${s.inv}</code></li>`)
+            .join("")}</ul>`;
+          // añadir solver
+          const btn = document.createElement("button");
+          btn.textContent = "Resolver ahora";
+          btn.className = "primary";
+          btn.onclick = () => renderSolver(cfg);
+          mount.appendChild(btn);
+        };
+      }
+
+      function invertOp(op) {
+        op = op.replaceAll(" ", "");
+        if (/^\+[0-9]+(\.[0-9]+)?$/.test(op)) return "-" + op.slice(1);
+        if (/^-[0-9]+(\.[0-9]+)?$/.test(op)) return "+" + op.slice(1);
+        if (/^×[0-9]+(\.[0-9]+)?$/.test(op)) return "÷" + op.slice(1);
+        if (/^÷[0-9]+(\.[0-9]+)?$/.test(op)) return "×" + op.slice(1);
+        if (op === "doble" || op === "×2") return "mitad";
+        if (op === "mitad" || op === "÷2") return "×2";
+        return "¿inversa?";
+      }
+
+      document.querySelectorAll(".problem .open").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const key = btn.closest(".problem").dataset.problem;
+          if (key === "custom") return renderCustom();
+          renderSolver(problems[key]);
+        });
+      });
+
+      // ===== Quiz =====
+      document.getElementById("grade").onclick = () => {
+        let total = 0,
+          ok = 0;
+        document.querySelectorAll(".question").forEach((q) => {
+          total++;
+          const ans = q.dataset.answer;
+          const sel = (q.querySelector("input[type=radio]:checked") || {})
+            .value;
+          if (sel === ans) {
+            ok++;
+            q.style.borderColor = "rgba(16,185,129,.6)";
+          } else {
+            q.style.borderColor = "rgba(239,68,68,.6)";
+          }
+        });
+        document.getElementById(
+          "score"
+        ).textContent = `Resultado: ${ok}/${total}`;
+        localStorage.setItem(
+          "rbw-quiz",
+          JSON.stringify({ ok, total, ts: Date.now() })
+        );
+      };
+      document.getElementById("saveProgress").onclick = () => {
+        const blob = new Blob([localStorage.getItem("rbw-quiz") || "{}"], {
+          type: "application/json",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "progreso_resolucion_inversa.json";
+        a.click();
+      };
+      document.getElementById("loadProgress").onclick = () => {
+        const inp = document.createElement("input");
+        inp.type = "file";
+        inp.accept = ".json,application/json";
+        inp.onchange = () => {
+          const file = inp.files[0];
+          const fr = new FileReader();
+          fr.onload = () => {
+            try {
+              const data = JSON.parse(fr.result);
+              document.getElementById("score").textContent =
+                data.ok != null
+                  ? `Cargado: ${data.ok}/${data.total}`
+                  : "Archivo inválido";
+            } catch (e) {
+              alert("Archivo no válido");
+            }
+          };
+          fr.readAsText(file);
+        };
+        inp.click();
+      };
+
+      // ===== Export plantilla =====
+      document.getElementById("exportJSON").onclick = () => {
+        const tpl = {
+          meta: "",
+          pasos: [
+            { op: "+k", inv: "-k" },
+            { op: "×m", inv: "÷m" },
+          ],
+          notas: "Justifica cada inversión",
+        };
+        const blob = new Blob([JSON.stringify(tpl, null, 2)], {
+          type: "application/json",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "plantilla_trabajo_inverso.json";
+        a.click();
+      };
+
+      // ===== Tema =====
+      let dark = true;
+      document.getElementById("toggleTheme").onclick = () => {
+        dark = !dark;
+        document.body.style.filter = dark
+          ? "none"
+          : "invert(1) hue-rotate(180deg)";
+      };
+
+      // ===== Modal util =====
+      const modal = document.getElementById("modal");
+      function openModal(title, html) {
+        document.getElementById("modalTitle").textContent = title;
+        document.getElementById("modalContent").innerHTML = html;
+        modal.classList.add("show");
+      }
+      document.getElementById("closeModal").onclick = () =>
+        modal.classList.remove("show");
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) modal.classList.remove("show");
+      });
+    </script>
+  </body>
+</html>
